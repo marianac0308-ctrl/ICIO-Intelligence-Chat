@@ -1,8 +1,65 @@
+import { useEffect, useRef, useState } from 'react'
 import { members } from '../data.js'
 import Avatar from './Avatar.jsx'
 import { LockIcon, FileIcon, CertificateIcon, SendIcon } from '../icons.jsx'
 
+const initialMessages = [
+  {
+    id: 'm1',
+    from: 'out',
+    text: 'Requesting any third-party threat indicators directed at Swedish critical infrastructure, window 72h. Process reference SE-2231.',
+    meta: 'Sweden · 14:02 · delivered',
+  },
+  {
+    id: 'm2',
+    from: 'in',
+    text: 'Confirmed indicator matching your reference. Transmitting assessment packet through the secure channel.',
+    meta: 'Finland · 14:09',
+    packet: {
+      filename: 'threat_assessment_FIN-0447.enc',
+    },
+  },
+]
+
+function timeNow() {
+  const d = new Date()
+  const h = String(d.getHours()).padStart(2, '0')
+  const m = String(d.getMinutes()).padStart(2, '0')
+  return `${h}:${m}`
+}
+
 export default function ExchangeScreen() {
+  const [messages, setMessages] = useState(initialMessages)
+  const [draft, setDraft] = useState('')
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [messages])
+
+  function sendMessage() {
+    const text = draft.trim()
+    if (!text) return
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `local-${Date.now()}`,
+        from: 'out',
+        text,
+        meta: `Sweden · ${timeNow()} · delivered`,
+      },
+    ])
+    setDraft('')
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+
   return (
     <div className="panel exchange-panel">
       <div className="panel-header">
@@ -51,43 +108,41 @@ export default function ExchangeScreen() {
             </div>
           </div>
 
-          <div className="thread-scroll">
+          <div className="thread-scroll" ref={scrollRef}>
             <div className="system-note-row">
               <span className="system-note">
                 End-to-end encrypted &middot; metadata logged for chain of custody
               </span>
             </div>
 
-            <div className="message-row message-row-out">
-              <div className="bubble bubble-out">
-                Requesting any third-party threat indicators directed at Swedish critical
-                infrastructure, window 72h. Process reference SE-2231.
-              </div>
-              <div className="message-meta message-meta-out">Sweden &middot; 14:02 &middot; delivered</div>
-            </div>
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={msg.from === 'out' ? 'message-row message-row-out' : 'message-row message-row-in'}
+              >
+                <div className={msg.from === 'out' ? 'bubble bubble-out' : 'bubble bubble-in'}>{msg.text}</div>
 
-            <div className="message-row message-row-in">
-              <div className="bubble bubble-in">
-                Confirmed indicator matching your reference. Transmitting assessment packet
-                through the secure channel.
-              </div>
-
-              <div className="packet-card">
-                <div className="packet-strip">
-                  <CertificateIcon width={14} height={14} />
-                  <span>Chamber-certified origin</span>
-                </div>
-                <div className="packet-body">
-                  <FileIcon width={20} height={20} />
-                  <div className="packet-file-meta">
-                    <div className="packet-filename">threat_assessment_FIN-0447.enc</div>
-                    <div className="packet-subtext">Chain of custody verified &middot; lawful origin</div>
+                {msg.packet && (
+                  <div className="packet-card">
+                    <div className="packet-strip">
+                      <CertificateIcon width={14} height={14} />
+                      <span>Chamber-certified origin</span>
+                    </div>
+                    <div className="packet-body">
+                      <FileIcon width={20} height={20} />
+                      <div className="packet-file-meta">
+                        <div className="packet-filename">{msg.packet.filename}</div>
+                        <div className="packet-subtext">Chain of custody verified &middot; lawful origin</div>
+                      </div>
+                    </div>
                   </div>
+                )}
+
+                <div className={msg.from === 'out' ? 'message-meta message-meta-out' : 'message-meta message-meta-in'}>
+                  {msg.meta}
                 </div>
               </div>
-
-              <div className="message-meta message-meta-in">Finland &middot; 14:09</div>
-            </div>
+            ))}
           </div>
 
           <div className="composer">
@@ -96,9 +151,16 @@ export default function ExchangeScreen() {
               className="composer-input"
               type="text"
               placeholder="Encrypted message to certified member…"
-              disabled
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
-            <button className="composer-send" disabled aria-label="Send">
+            <button
+              className="composer-send"
+              onClick={sendMessage}
+              disabled={!draft.trim()}
+              aria-label="Send"
+            >
               <SendIcon width={16} height={16} />
             </button>
           </div>
