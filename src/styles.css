@@ -470,26 +470,27 @@ body {
   flex: 1;
   border: 1px solid var(--border);
   background: var(--surface-alt);
-  color: var(--text-faint);
+  color: var(--text);
   font-family: inherit;
   font-size: 13px;
   padding: 9px 12px;
   border-radius: 6px;
 }
 
-.composer-input::placeholder {
-  color: var(--text-faint);
+.composer-input:focus {
+  outline: none;
+  border-color: var(--border-strong);
 }
 
-.composer-input:disabled {
-  cursor: not-allowed;
+.composer-input::placeholder {
+  color: var(--text-faint);
 }
 
 .composer-send {
   appearance: none;
   border: 1px solid var(--border);
   background: var(--surface-alt);
-  color: var(--text-faint);
+  color: var(--text-muted);
   width: 34px;
   height: 34px;
   border-radius: 6px;
@@ -497,6 +498,17 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  cursor: pointer;
+}
+
+.composer-send:hover:not(:disabled) {
+  color: var(--green);
+  border-color: var(--green-border);
+  background: var(--green-bg);
+}
+
+.composer-send:disabled {
+  color: var(--text-faint);
   cursor: not-allowed;
 }
 
