@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ShieldIcon, MoonIcon, SunIcon } from './icons.jsx'
 import FloorNav from './components/FloorNav.jsx'
 import PassportScreen from './components/PassportScreen.jsx'
 import TakeoffScreen from './components/TakeoffScreen.jsx'
+import DemoUnlockToggle from './components/DemoUnlockToggle.jsx'
 import { ACTING_COUNTRY, CLEARANCE_THRESHOLD, initialRegistry, randomStamp, todayISO } from './registryData.js'
 
 export default function App() {
@@ -10,20 +11,22 @@ export default function App() {
   const [dark, setDark] = useState(false)
   const [registry, setRegistry] = useState(initialRegistry)
   const [lastAddedId, setLastAddedId] = useState(null)
-  const [attemptedLocked, setAttemptedLocked] = useState(false)
+  const [demoUnlock, setDemoUnlock] = useState(false)
 
   const swedenRows = registry.filter((r) => r.country === ACTING_COUNTRY)
   const preventionCount = swedenRows.filter((r) => r.stamp === 'prevention').length
-  const isEligible = preventionCount >= CLEARANCE_THRESHOLD
+  const isEligible = demoUnlock || preventionCount >= CLEARANCE_THRESHOLD
 
-  function selectFloor(target) {
-    if (target === 'takeoff' && !isEligible) {
-      setAttemptedLocked(true)
-      return
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'u') {
+        e.preventDefault()
+        setDemoUnlock((v) => !v)
+      }
     }
-    setAttemptedLocked(false)
-    setFloor(target)
-  }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   function submitRequest({ type, purpose }) {
     const entry = {
@@ -57,11 +60,10 @@ export default function App() {
 
       <FloorNav
         floor={floor}
-        onSelect={selectFloor}
+        onSelect={setFloor}
         isEligible={isEligible}
         preventionCount={preventionCount}
         threshold={CLEARANCE_THRESHOLD}
-        attemptedLocked={attemptedLocked}
       />
 
       <div className="app-stage">
@@ -73,12 +75,14 @@ export default function App() {
             isEligible={isEligible}
             preventionCount={preventionCount}
             threshold={CLEARANCE_THRESHOLD}
-            onGoToTakeoff={() => selectFloor('takeoff')}
+            onGoToTakeoff={() => setFloor('takeoff')}
           />
         ) : (
-          <TakeoffScreen />
+          <TakeoffScreen isEligible={isEligible} />
         )}
       </div>
+
+      <DemoUnlockToggle active={demoUnlock} onToggle={() => setDemoUnlock((v) => !v)} />
     </div>
   )
 }
