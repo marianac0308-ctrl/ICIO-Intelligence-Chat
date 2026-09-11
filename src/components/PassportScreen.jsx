@@ -1,43 +1,28 @@
 import { useState } from 'react'
-import { ACTING_COUNTRY, intelligenceTypes, purposePresets, initialRegistry } from '../registryData.js'
+import { ACTING_COUNTRY, intelligenceTypes, purposePresets } from '../registryData.js'
 import StampBadge from './StampBadge.jsx'
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10)
-}
-
-function randomStamp() {
-  const r = Math.random()
-  if (r < 0.5) return 'prevention'
-  if (r < 0.8) return 'review'
-  return 'rejected'
-}
-
-export default function PassportScreen({ onGoToReferee }) {
-  const [registry, setRegistry] = useState(initialRegistry)
+export default function PassportScreen({
+  registry,
+  lastAddedId,
+  onSubmitRequest,
+  isEligible,
+  preventionCount,
+  threshold,
+  onGoToTakeoff,
+}) {
   const [type, setType] = useState(intelligenceTypes[0])
   const [purpose, setPurpose] = useState('')
-  const [lastId, setLastId] = useState(null)
 
   function handleSubmit(e) {
     e.preventDefault()
     const trimmed = purpose.trim()
     if (!trimmed) return
-    const entry = {
-      id: `local-${Date.now()}`,
-      country: ACTING_COUNTRY,
-      type,
-      purpose: trimmed,
-      stamp: randomStamp(),
-      date: todayISO(),
-    }
-    setRegistry((prev) => [entry, ...prev])
-    setLastId(entry.id)
+    onSubmitRequest({ type, purpose: trimmed })
     setPurpose('')
   }
 
   const swedenRows = registry.filter((r) => r.country === ACTING_COUNTRY)
-  const preventionCount = swedenRows.filter((r) => r.stamp === 'prevention').length
 
   return (
     <div className="panel passport-panel">
@@ -117,7 +102,7 @@ export default function PassportScreen({ onGoToReferee }) {
             </thead>
             <tbody>
               {registry.map((row) => (
-                <tr key={row.id} className={row.id === lastId ? 'registry-row-new' : undefined}>
+                <tr key={row.id} className={row.id === lastAddedId ? 'registry-row-new' : undefined}>
                   <td>{row.country}</td>
                   <td>{row.type}</td>
                   <td>{row.purpose}</td>
@@ -132,16 +117,24 @@ export default function PassportScreen({ onGoToReferee }) {
         </div>
       </div>
 
-      <div className="bridge-card">
+      <div className={isEligible ? 'bridge-card' : 'bridge-card bridge-card-locked'}>
         <div className="bridge-card-text">
           <div className="bridge-card-title">Track record &middot; {ACTING_COUNTRY}</div>
           <div className="bridge-card-stats">
             {swedenRows.length} requests logged &middot; {preventionCount} prevention stamps
           </div>
-          <div className="bridge-card-line">Clean record &rarr; eligible for certification.</div>
+          <div className="bridge-card-line">
+            {isEligible
+              ? 'Clean record — eligible for certification.'
+              : `Clean record → eligible for certification (${preventionCount}/${threshold} clean stamps).`}
+          </div>
         </div>
-        <button type="button" className="bridge-card-cta" onClick={onGoToReferee}>
-          Go to Floor 2 &middot; Referee
+        <button
+          type="button"
+          className={isEligible ? 'bridge-card-cta' : 'bridge-card-cta bridge-card-cta-locked'}
+          onClick={onGoToTakeoff}
+        >
+          {isEligible ? 'Go to Floor 2 · Cleared for takeoff' : `Floor 2 locked · ${preventionCount}/${threshold}`}
         </button>
       </div>
     </div>

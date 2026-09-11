@@ -67,7 +67,7 @@ export default function ExchangeScreen() {
           <LockIcon width={16} height={16} />
           <div>
             <span className="panel-title">Certified exchange network</span>
-            <div className="panel-subtitle">Certified-members-only &middot; unlocked by passing the Referee</div>
+            <div className="panel-subtitle">Certified-members-only &middot; unlocked once cleared for takeoff</div>
           </div>
         </div>
         <div className="status-pill status-pill-secure">

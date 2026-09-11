@@ -1,11 +1,42 @@
 import { useState } from 'react'
 import { ShieldIcon, MoonIcon, SunIcon } from './icons.jsx'
+import FloorNav from './components/FloorNav.jsx'
 import PassportScreen from './components/PassportScreen.jsx'
-import RefereeScreen from './components/RefereeScreen.jsx'
+import TakeoffScreen from './components/TakeoffScreen.jsx'
+import { ACTING_COUNTRY, CLEARANCE_THRESHOLD, initialRegistry, randomStamp, todayISO } from './registryData.js'
 
 export default function App() {
   const [floor, setFloor] = useState('passport')
   const [dark, setDark] = useState(false)
+  const [registry, setRegistry] = useState(initialRegistry)
+  const [lastAddedId, setLastAddedId] = useState(null)
+  const [attemptedLocked, setAttemptedLocked] = useState(false)
+
+  const swedenRows = registry.filter((r) => r.country === ACTING_COUNTRY)
+  const preventionCount = swedenRows.filter((r) => r.stamp === 'prevention').length
+  const isEligible = preventionCount >= CLEARANCE_THRESHOLD
+
+  function selectFloor(target) {
+    if (target === 'takeoff' && !isEligible) {
+      setAttemptedLocked(true)
+      return
+    }
+    setAttemptedLocked(false)
+    setFloor(target)
+  }
+
+  function submitRequest({ type, purpose }) {
+    const entry = {
+      id: `local-${Date.now()}`,
+      country: ACTING_COUNTRY,
+      type,
+      purpose,
+      stamp: randomStamp(),
+      date: todayISO(),
+    }
+    setRegistry((prev) => [entry, ...prev])
+    setLastAddedId(entry.id)
+  }
 
   return (
     <div className={dark ? 'app dark' : 'app'}>
@@ -14,41 +45,38 @@ export default function App() {
           <ShieldIcon width={18} height={18} />
           <span>ICIO intelligence platform</span>
         </div>
-        <div className="top-controls">
-          <div className="tabs" role="tablist">
-            <button
-              role="tab"
-              aria-selected={floor === 'passport'}
-              className={floor === 'passport' ? 'tab active' : 'tab'}
-              onClick={() => setFloor('passport')}
-            >
-              Floor 1 &middot; Passport
-            </button>
-            <button
-              role="tab"
-              aria-selected={floor === 'referee'}
-              className={floor === 'referee' ? 'tab active' : 'tab'}
-              onClick={() => setFloor('referee')}
-            >
-              Floor 2 &middot; Referee
-            </button>
-          </div>
-          <button
-            className="mode-toggle"
-            onClick={() => setDark((v) => !v)}
-            aria-label="Toggle dark mode"
-            title="Toggle dark mode"
-          >
-            {dark ? <SunIcon width={16} height={16} /> : <MoonIcon width={16} height={16} />}
-          </button>
-        </div>
+        <button
+          className="mode-toggle"
+          onClick={() => setDark((v) => !v)}
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >
+          {dark ? <SunIcon width={16} height={16} /> : <MoonIcon width={16} height={16} />}
+        </button>
       </div>
+
+      <FloorNav
+        floor={floor}
+        onSelect={selectFloor}
+        isEligible={isEligible}
+        preventionCount={preventionCount}
+        threshold={CLEARANCE_THRESHOLD}
+        attemptedLocked={attemptedLocked}
+      />
 
       <div className="app-stage">
         {floor === 'passport' ? (
-          <PassportScreen onGoToReferee={() => setFloor('referee')} />
+          <PassportScreen
+            registry={registry}
+            lastAddedId={lastAddedId}
+            onSubmitRequest={submitRequest}
+            isEligible={isEligible}
+            preventionCount={preventionCount}
+            threshold={CLEARANCE_THRESHOLD}
+            onGoToTakeoff={() => selectFloor('takeoff')}
+          />
         ) : (
-          <RefereeScreen />
+          <TakeoffScreen />
         )}
       </div>
     </div>

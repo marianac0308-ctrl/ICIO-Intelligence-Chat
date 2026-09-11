@@ -5,24 +5,33 @@ Model UN committee presentation. Everything is hardcoded/in-memory: no backend,
 no real encryption, no authentication. It is meant to *look* like a real,
 official, classified-style system.
 
-The platform is one login with two connected levels, toggled with the tab bar
-at the top:
+The platform is one login with two connected levels, presented as an ordered,
+gated progression (customs → cleared for takeoff) rather than two equal tabs:
 
 1. **Floor 1 · Passport** — open to any country from day one. A mock request
    form (intelligence type + purpose) submits into a public registry: every
    request — including rejections — is stamped ("Prevention · fast lane",
    "Review · 72 hours", or "Rejected · no reason owed") and logged for all
    members to see. A "Track record" card at the bottom tallies the acting
-   country's (Sweden's) history and is the bridge into Floor 2: a clean,
-   mostly-prevention record is what makes a country eligible for
-   certification.
-2. **Floor 2 · Referee** — earned, not open by default. Shows the country
-   submitting its full legal framework (never intelligence content) to the
-   Chamber's 8-criteria checklist, backed by its Passport track record. Once
-   certification is granted, the view unlocks into the certified-members-only
-   encrypted channel (member list + conversation thread with Finland,
-   including a "certified intelligence packet" card and an interactive
-   composer).
+   country's (Sweden's) history.
+2. **Floor 2 · Cleared for takeoff** — locked by default. The step in the top
+   nav shows a lock icon and a live progress readout ("4 / 5 clean stamps —
+   keep building your record") tied to Sweden's prevention-stamp count in the
+   Floor 1 registry. Submitting more clean requests on Floor 1 moves the
+   counter up in real time; clicking the locked step early shows an inline
+   "Clear customs first" message instead of switching screens. Once the
+   clearance threshold is met, the step visually unlocks (open-lock icon, a
+   muted-green "Eligible for certification" badge, active styling) and
+   becomes reachable. Inside, the country submits its full legal framework
+   (never intelligence content) to the Chamber's 8-criteria checklist, backed
+   by its Passport track record. Once certification is granted, the view
+   unlocks into the certified-members-only encrypted channel (member list +
+   conversation thread with Finland, including a "certified intelligence
+   packet" card and an interactive composer).
+
+The registry is pre-seeded close to the clearance threshold, so a couple of
+live submissions during a demo are enough to cross it and watch Floor 2
+unlock.
 
 A dark mode toggle is available in the top-right corner.
 
@@ -100,17 +109,19 @@ One-time setup:
 
 ```
 src/
-  App.jsx                     top-level floor tabs + dark mode toggle
+  App.jsx                     owns floor/registry/eligibility state + dark mode toggle
   data.js                     mock member list & certification criteria
-  registryData.js              Passport mock data: intelligence types, purpose
-                               presets, stamp copy, and the pre-populated registry
+  registryData.js             Passport mock data: intelligence types, purpose
+                               presets, stamp copy, clearance threshold, and the
+                               pre-populated registry
   icons.jsx                   inline SVG icons
   styles.css                  all styling (light/dark theme via CSS variables)
   components/
     Avatar.jsx                circular country-code avatar
     StampBadge.jsx            colored stamp pill (prevention / review / rejected)
+    FloorNav.jsx              ordered floor-1 → floor-2 step nav with lock/progress state
     PassportScreen.jsx        Floor 1: request form + public registry + track record
-    CertificationScreen.jsx   Chamber's 8-criteria checklist (used inside Floor 2)
-    RefereeScreen.jsx         Floor 2: certification checklist → unlock → exchange
+    CertificationScreen.jsx   the Chamber's 8-criteria checklist (used inside Floor 2)
+    TakeoffScreen.jsx         Floor 2: certification checklist → unlock → exchange
     ExchangeScreen.jsx        the certified-members-only secure thread + composer
 ```
