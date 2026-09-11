@@ -105,42 +105,6 @@ body {
   color: var(--text);
 }
 
-.top-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.tabs {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.tab {
-  appearance: none;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-family: inherit;
-  padding: 8px 14px;
-  cursor: pointer;
-  border-right: 1px solid var(--border);
-}
-
-.tab:last-child {
-  border-right: none;
-}
-
-.tab.active {
-  background: var(--surface-alt);
-  color: var(--text);
-  font-weight: 600;
-}
-
 .mode-toggle {
   appearance: none;
   border: 1px solid var(--border);
@@ -158,6 +122,156 @@ body {
 .mode-toggle:hover {
   color: var(--text);
   border-color: var(--border-strong);
+}
+
+/* floor nav */
+
+.floor-nav-wrap {
+  width: 100%;
+  max-width: 1040px;
+  margin-bottom: 18px;
+}
+
+.floor-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.floor-step {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1;
+  text-align: left;
+}
+
+.floor-step-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.floor-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.floor-step-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.floor-step-sublabel {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.floor-step-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.floor-step-active {
+  background: var(--surface-alt);
+  border-color: var(--border-strong);
+}
+
+.floor-step-active .floor-step-index {
+  background: var(--text);
+  color: var(--surface);
+  border-color: var(--text);
+}
+
+.floor-step-takeoff {
+  color: var(--text-faint);
+}
+
+.floor-step-locked {
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+
+.floor-step-locked .floor-step-label {
+  color: var(--text-muted);
+}
+
+.floor-step-unlocked {
+  color: var(--green);
+  border-color: var(--green-border);
+  background: var(--green-bg);
+}
+
+.floor-step-unlocked .floor-step-label {
+  color: var(--text);
+}
+
+.floor-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.floor-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 0 2px;
+}
+
+.floor-progress-track {
+  width: 120px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.floor-progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.floor-progress-text {
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.floor-locked-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--red);
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-radius: 6px;
+  padding: 8px 12px;
 }
 
 /* stage */
@@ -828,6 +942,15 @@ body {
   margin-top: 4px;
 }
 
+.bridge-card-locked {
+  border-color: var(--border-strong);
+  background: var(--surface-alt);
+}
+
+.bridge-card-locked .bridge-card-line {
+  color: var(--text-muted);
+}
+
 .bridge-card-cta {
   appearance: none;
   border: 1px solid var(--green-border);
@@ -847,11 +970,32 @@ body {
   border-color: var(--green);
 }
 
-/* referee screen */
+.bridge-card-cta-locked {
+  color: var(--text-faint);
+  border-color: var(--border-strong);
+  background: var(--surface-alt);
+}
 
-.referee-screen {
+.bridge-card-cta-locked:hover {
+  background: var(--surface-alt);
+  border-color: var(--border-strong);
+}
+
+/* takeoff screen */
+
+.takeoff-screen {
   display: flex;
   flex-direction: column;
+}
+
+.takeoff-lead-note {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
 }
 
 .unlock-divider {
@@ -899,5 +1043,19 @@ body {
 
   .passport-body {
     padding: 16px 14px 4px;
+  }
+
+  .floor-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .floor-connector {
+    transform: rotate(90deg);
+    padding: 2px 0;
+  }
+
+  .floor-progress-track {
+    width: 90px;
   }
 }

@@ -26,6 +26,23 @@ export function LockIcon(props) {
   )
 }
 
+export function UnlockIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="5" y="11" width="14" height="9" rx="1.5" />
+      <path d="M8 11V7a4 4 0 0 1 7.5-2" />
+    </svg>
+  )
+}
+
+export function ArrowRightIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 12h16M13 5l7 7-7 7" />
+    </svg>
+  )
+}
+
 export function CheckIcon(props) {
   return (
     <svg {...base} {...props}>

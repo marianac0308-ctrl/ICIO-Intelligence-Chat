@@ -1,5 +1,7 @@
 export const ACTING_COUNTRY = 'Sweden'
 
+export const CLEARANCE_THRESHOLD = 5
+
 export const intelligenceTypes = ['HUMINT', 'SIGINT', 'OSINT', 'Covert action']
 
 export const purposePresets = [
@@ -19,6 +21,17 @@ export const stampMeta = {
   rejected: { label: 'Rejected · no reason owed' },
 }
 
+export function todayISO() {
+  return new Date().toISOString().slice(0, 10)
+}
+
+export function randomStamp() {
+  const r = Math.random()
+  if (r < 0.5) return 'prevention'
+  if (r < 0.8) return 'review'
+  return 'rejected'
+}
+
 export const initialRegistry = [
   {
     id: 'r1',
@@ -26,7 +39,7 @@ export const initialRegistry = [
     type: 'SIGINT',
     purpose: 'Critical infrastructure threat',
     stamp: 'prevention',
-    date: '2026-09-09',
+    date: '2026-09-10',
   },
   {
     id: 'r2',
@@ -34,7 +47,7 @@ export const initialRegistry = [
     type: 'HUMINT',
     purpose: 'Counter-terrorism lead',
     stamp: 'prevention',
-    date: '2026-09-08',
+    date: '2026-09-10',
   },
   {
     id: 'r3',
@@ -42,7 +55,7 @@ export const initialRegistry = [
     type: 'OSINT',
     purpose: 'Election interference concern',
     stamp: 'review',
-    date: '2026-09-06',
+    date: '2026-09-09',
   },
   {
     id: 'r4',
@@ -50,38 +63,62 @@ export const initialRegistry = [
     type: 'Covert action',
     purpose: 'Border security concern',
     stamp: 'rejected',
-    date: '2026-09-05',
+    date: '2026-09-09',
   },
   {
     id: 'r5',
-    country: 'Denmark',
-    type: 'SIGINT',
-    purpose: 'Cyber intrusion attribution',
-    stamp: 'prevention',
-    date: '2026-09-04',
-  },
-  {
-    id: 'r6',
     country: 'Sweden',
     type: 'HUMINT',
     purpose: 'Organized crime network',
     stamp: 'prevention',
-    date: '2026-09-03',
+    date: '2026-09-08',
+  },
+  {
+    id: 'r6',
+    country: 'Denmark',
+    type: 'SIGINT',
+    purpose: 'Cyber intrusion attribution',
+    stamp: 'prevention',
+    date: '2026-09-08',
   },
   {
     id: 'r7',
+    country: 'Sweden',
+    type: 'SIGINT',
+    purpose: 'Maritime security threat',
+    stamp: 'prevention',
+    date: '2026-09-06',
+  },
+  {
+    id: 'r8',
     country: 'Estonia',
     type: 'OSINT',
     purpose: 'Maritime security threat',
     stamp: 'review',
-    date: '2026-09-02',
+    date: '2026-09-05',
   },
   {
-    id: 'r8',
+    id: 'r9',
+    country: 'Sweden',
+    type: 'Covert action',
+    purpose: 'Energy supply disruption risk',
+    stamp: 'rejected',
+    date: '2026-09-04',
+  },
+  {
+    id: 'r10',
     country: 'Netherlands',
     type: 'Covert action',
     purpose: 'Energy supply disruption risk',
     stamp: 'rejected',
+    date: '2026-09-02',
+  },
+  {
+    id: 'r11',
+    country: 'Sweden',
+    type: 'HUMINT',
+    purpose: 'Counter-terrorism lead',
+    stamp: 'prevention',
     date: '2026-09-01',
   },
 ]
