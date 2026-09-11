@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { ShieldIcon, MoonIcon, SunIcon } from './icons.jsx'
-import ExchangeScreen from './components/ExchangeScreen.jsx'
-import CertificationScreen from './components/CertificationScreen.jsx'
+import PassportScreen from './components/PassportScreen.jsx'
+import RefereeScreen from './components/RefereeScreen.jsx'
 
 export default function App() {
-  const [tab, setTab] = useState('exchange')
+  const [floor, setFloor] = useState('passport')
   const [dark, setDark] = useState(false)
 
   return (
@@ -12,25 +12,25 @@ export default function App() {
       <div className="app-topbar">
         <div className="brand">
           <ShieldIcon width={18} height={18} />
-          <span>ICIO intelligence exchange</span>
+          <span>ICIO intelligence platform</span>
         </div>
         <div className="top-controls">
           <div className="tabs" role="tablist">
             <button
               role="tab"
-              aria-selected={tab === 'exchange'}
-              className={tab === 'exchange' ? 'tab active' : 'tab'}
-              onClick={() => setTab('exchange')}
+              aria-selected={floor === 'passport'}
+              className={floor === 'passport' ? 'tab active' : 'tab'}
+              onClick={() => setFloor('passport')}
             >
-              Exchange network
+              Floor 1 &middot; Passport
             </button>
             <button
               role="tab"
-              aria-selected={tab === 'certification'}
-              className={tab === 'certification' ? 'tab active' : 'tab'}
-              onClick={() => setTab('certification')}
+              aria-selected={floor === 'referee'}
+              className={floor === 'referee' ? 'tab active' : 'tab'}
+              onClick={() => setFloor('referee')}
             >
-              Certification review
+              Floor 2 &middot; Referee
             </button>
           </div>
           <button
@@ -45,7 +45,11 @@ export default function App() {
       </div>
 
       <div className="app-stage">
-        {tab === 'exchange' ? <ExchangeScreen /> : <CertificationScreen />}
+        {floor === 'passport' ? (
+          <PassportScreen onGoToReferee={() => setFloor('referee')} />
+        ) : (
+          <RefereeScreen />
+        )}
       </div>
     </div>
   )

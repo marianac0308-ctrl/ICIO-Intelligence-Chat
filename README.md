@@ -1,17 +1,28 @@
-# ICIO intelligence exchange — Model UN mockup
+# ICIO intelligence platform — Model UN mockup
 
 A static front-end mockup of a secure intelligence-sharing platform, built for a
 Model UN committee presentation. Everything is hardcoded/in-memory: no backend,
 no real encryption, no authentication. It is meant to *look* like a real,
 official, classified-style system.
 
-Two screens, toggled with the tab bar at the top:
+The platform is one login with two connected levels, toggled with the tab bar
+at the top:
 
-1. **Exchange network** — a two-panel secure messaging view (member list +
-   conversation thread with Finland, including a "certified intelligence
-   packet" card).
-2. **Certification review** — the Chamber's 8-criteria checklist for
-   certifying a country's legal framework.
+1. **Floor 1 · Passport** — open to any country from day one. A mock request
+   form (intelligence type + purpose) submits into a public registry: every
+   request — including rejections — is stamped ("Prevention · fast lane",
+   "Review · 72 hours", or "Rejected · no reason owed") and logged for all
+   members to see. A "Track record" card at the bottom tallies the acting
+   country's (Sweden's) history and is the bridge into Floor 2: a clean,
+   mostly-prevention record is what makes a country eligible for
+   certification.
+2. **Floor 2 · Referee** — earned, not open by default. Shows the country
+   submitting its full legal framework (never intelligence content) to the
+   Chamber's 8-criteria checklist, backed by its Passport track record. Once
+   certification is granted, the view unlocks into the certified-members-only
+   encrypted channel (member list + conversation thread with Finland,
+   including a "certified intelligence packet" card and an interactive
+   composer).
 
 A dark mode toggle is available in the top-right corner.
 
@@ -89,12 +100,17 @@ One-time setup:
 
 ```
 src/
-  App.jsx                     top-level tabs + dark mode toggle
+  App.jsx                     top-level floor tabs + dark mode toggle
   data.js                     mock member list & certification criteria
+  registryData.js              Passport mock data: intelligence types, purpose
+                               presets, stamp copy, and the pre-populated registry
   icons.jsx                   inline SVG icons
   styles.css                  all styling (light/dark theme via CSS variables)
   components/
     Avatar.jsx                circular country-code avatar
-    ExchangeScreen.jsx        screen 1: member list + secure thread
-    CertificationScreen.jsx   screen 2: certification checklist
+    StampBadge.jsx            colored stamp pill (prevention / review / rejected)
+    PassportScreen.jsx        Floor 1: request form + public registry + track record
+    CertificationScreen.jsx   Chamber's 8-criteria checklist (used inside Floor 2)
+    RefereeScreen.jsx         Floor 2: certification checklist → unlock → exchange
+    ExchangeScreen.jsx        the certified-members-only secure thread + composer
 ```

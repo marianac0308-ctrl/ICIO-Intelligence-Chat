@@ -65,7 +65,10 @@ export default function ExchangeScreen() {
       <div className="panel-header">
         <div className="panel-header-left">
           <LockIcon width={16} height={16} />
-          <span className="panel-title">Certified exchange network</span>
+          <div>
+            <span className="panel-title">Certified exchange network</span>
+            <div className="panel-subtitle">Certified-members-only &middot; unlocked by passing the Referee</div>
+          </div>
         </div>
         <div className="status-pill status-pill-secure">
           <LockIcon width={13} height={13} />
@@ -111,7 +114,7 @@ export default function ExchangeScreen() {
           <div className="thread-scroll" ref={scrollRef}>
             <div className="system-note-row">
               <span className="system-note">
-                End-to-end encrypted &middot; metadata logged for chain of custody
+                End-to-end encrypted &middot; who requested what is logged, never the content
               </span>
             </div>
 

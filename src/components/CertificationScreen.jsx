@@ -6,11 +6,12 @@ export default function CertificationScreen() {
     <div className="panel certification-panel">
       <div className="cert-card">
         <div className="cert-card-header">
-          <div className="panel-title">Certification review &middot; applicant: Finland</div>
+          <div className="panel-title">ICIO certification review &middot; applicant: Sweden</div>
         </div>
 
         <div className="cert-note">
-          The Chamber reviews the legal framework only. No intelligence is submitted or seen.
+          Reviewed in a closed hearing, backed by the country&rsquo;s Passport history. The Chamber
+          reviews the legal framework only &mdash; no intelligence is submitted or seen.
         </div>
 
         <div className="cert-checklist">
