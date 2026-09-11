@@ -125,8 +125,8 @@ export default function PassportScreen({
           </div>
           <div className="bridge-card-line">
             {isEligible
-              ? 'Clean record — eligible for certification.'
-              : `Clean record → eligible for certification (${preventionCount}/${threshold} clean stamps).`}
+              ? 'Clean record — cleared for takeoff.'
+              : `Clean record → cleared for takeoff (${preventionCount}/${threshold} clean stamps).`}
           </div>
         </div>
         <button
@@ -134,7 +134,9 @@ export default function PassportScreen({
           className={isEligible ? 'bridge-card-cta' : 'bridge-card-cta bridge-card-cta-locked'}
           onClick={onGoToTakeoff}
         >
-          {isEligible ? 'Go to Floor 2 · Cleared for takeoff' : `Floor 2 locked · ${preventionCount}/${threshold}`}
+          {isEligible
+            ? 'Go to Checkpoint 2 · Cleared for takeoff'
+            : `Preview Checkpoint 2 · ${preventionCount}/${threshold}`}
         </button>
       </div>
     </div>
